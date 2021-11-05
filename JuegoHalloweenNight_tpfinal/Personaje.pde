@@ -2,10 +2,16 @@
 class Personaje extends GameObject{
   
   /** Declaración de atributos */
+  private PImage imagen;
   private String nombre;
   private Integer puntaje;
   private float life;
   private Disfraz disfraz;
+  
+  /**Constructor por defecto*/
+  public Personaje(){
+    imagen = loadImage("/sprites/niña.png");
+  }
   
   /** Constructor Parametrizado*/
   public Personaje(String nombre, float life, Integer puntaje, Disfraz disfraz, PVector posicion){
@@ -53,7 +59,11 @@ class Personaje extends GameObject{
   }
   
   /** Declaración de Procedimientos y Funciones*/
-  public void display(){};//metodo (abstract) clase madre GameObject
+  public void display(){
+    imagen.resize(70,70);
+    imageMode(CENTER);
+    image(imagen,width/2,height/2);
+  };//metodo (abstract) clase madre GameObject
   public void mover(PVector prmPosicion){}//método que le permitirá la acción de moverse al personaje
   public void saltar(PVector prmPosicion){};//método que le permitirá la acción de saltar al personaje
   public void arrojarCaramelo(ListaDeCaramelos prmLista){}//método que le permitira realizar la accion de arrojar caramelos a los villanos
