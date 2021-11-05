@@ -15,7 +15,7 @@ class Tablero extends GameObject {
     this.alto = alto;
     this.posicion = new PVector();
     this.imagen = imagen;
-    this,nivel = nivel;
+    this.nivel = nivel;
   }
 
   /** Representa Métodos de Acceso (Getters y Setters)*/
