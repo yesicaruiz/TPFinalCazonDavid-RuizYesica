@@ -1,3 +1,5 @@
+PImage fondo;
+Personaje personaje;
 public void setup(){
   size(1280, 759);//permite redimencionar el lienzo en pixeles
   fondo = loadImage("/sprites/fondo1.jpg");
