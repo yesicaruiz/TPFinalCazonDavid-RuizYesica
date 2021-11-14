@@ -1,57 +1,22 @@
 /** Representa la Clase TABLERO (permite crear e instanciar el objeto Tablero */
-class Tablero extends GameObject {
+class Tablero extends FrameObject {
 
   /** Declaracion de atributos*/
-  private color colorFondo;
-  private Integer ancho;
-  private Integer alto;
-  private String imagen;
   private Integer nivel;
 
   /** Constructor parametrizado*/
-  public Tablero(color colorFonod, Integer ancho, Integer alto, String imagen, Integer nivel) {
-    this.colorFondo = colorFondo;
-    this.ancho = ancho;
-    this.alto = alto;
+  public Tablero(Integer widthFrame, Integer heightFrame, PImage sprite) {
+    super(widthFrame,heightFrame, sprite);
     this.posicion = new PVector();
-    this.imagen = imagen;
-    this,nivel = nivel;
+    this.nivel = 1;
   }
 
   /** Representa Métodos de Acceso (Getters y Setters)*/
-  public Integer getColorFondo() {
-    return this.colorFondo;
-  }
-  public void setColorPista(Integer colorFondo) {
-    this.colorFondo = colorFondo;
-  }
-
-  public Integer getAncho() {
-    return this.ancho;
-  }
-  public void setAncho(Integer ancho) {
-    this.ancho = ancho;
-  }
-
-  public Integer getAlto() {
-    return this.alto;
-  }
-  public void setAlto(Integer alto) {
-    this.alto = alto;
-  }
-
   public PVector getPosicion() {
     return this.posicion;
   }
   public void setPosicion(PVector posicion) {
     this.posicion = posicion;
-  }
-
-  public String getImagen() {
-    return this.imagen;
-  }
-  public void setImagen(String imagen) {
-    this.imagen = imagen;
   }
   
   public Integer getNivel() {
@@ -62,7 +27,27 @@ class Tablero extends GameObject {
   }
   
   /** Declaración de Procedimientos y Funciones*/
-  public void display(){};//metodo (abstract) clase madre GameObject
+  public void display(){
+    PImage puerta,escoba;
+    puerta = loadImage("sprites/Puerta01.png");
+    puerta.resize(160,200);
+    //int x = width/2;
+    //bloques.copy(x,0,x,height,0,0,x,height);
+    escoba = loadImage("sprites/Escoba.png");
+    escoba.resize(300,160);
+    
+    image(puerta,width-80,100);
+    image(escoba,posicion.x,posicion.y);
+    
+    if(posicion.x < width){
+      posicion.x=posicion.x+20;
+      posicion.y=height/2;
+    }else{
+      posicion.y++;
+      posicion.x=posicion.x=0;
+    }
+    
+  };//metodo (abstract) clase madre GameObject
   public void generarNivel(Integer prmNumero){};//metodo que permitirá generar el nivel en base a un párametro indicador
   
 }
