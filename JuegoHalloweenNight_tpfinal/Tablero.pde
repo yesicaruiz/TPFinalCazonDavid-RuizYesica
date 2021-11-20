@@ -1,53 +1,61 @@
 /** Representa la Clase TABLERO (permite crear e instanciar el objeto Tablero */
-class Tablero extends FrameObject {
-
-  /** Declaracion de atributos*/
-  private Integer nivel;
-
-  /** Constructor parametrizado*/
-  public Tablero(Integer widthFrame, Integer heightFrame, PImage sprite) {
-    super(widthFrame,heightFrame, sprite);
-    this.posicion = new PVector();
-    this.nivel = 1;
-  }
-
-  /** Representa Métodos de Acceso (Getters y Setters)*/
-  public PVector getPosicion() {
-    return this.posicion;
-  }
-  public void setPosicion(PVector posicion) {
-    this.posicion = posicion;
+class Tablero{
+  private PImage mySprite[];
+  private PImage bgFondo;
+  private float sizeSprite;
+  
+  //Constructor por Defecto
+  public Tablero(String name, String tilemap, float size)
+  {
+    sizeSprite = size;
+    mySprite = new File(8,5,"/sprites/Tileset32.png").getHoja();
+    plataforma = new ArrayList<FrameObject>();
+    
+    bgFondo = loadImage("/sprites/BG.jpg");
+    crearPlataforma(name);
   }
   
-  public Integer getNivel() {
-    return this.nivel;
-  }
-  public void setNivel(Integer nivel) {
-    this.nivel = nivel;
-  }
-  
-  /** Declaración de Procedimientos y Funciones*/
-  public void display(){
-    PImage puerta,escoba;
-    puerta = loadImage("sprites/Puerta01.png");
-    puerta.resize(160,200);
-    //int x = width/2;
-    //bloques.copy(x,0,x,height,0,0,x,height);
-    escoba = loadImage("sprites/Escoba.png");
-    escoba.resize(300,160);
+  //Metodo que muestra el Tablero
+  void mostrar(){
+    image(bgFondo,view_x+width/2,height/2-130);
     
-    image(puerta,width-80,100);
-    image(escoba,posicion.x,posicion.y);
-    
-    if(posicion.x < width){
-      posicion.x=posicion.x+20;
-      posicion.y=height/2;
-    }else{
-      posicion.y++;
-      posicion.x=posicion.x=0;
+    for(FrameObject p: plataforma)
+    {
+      p.display();
     }
-    
-  };//metodo (abstract) clase madre GameObject
-  public void generarNivel(Integer prmNumero){};//metodo que permitirá generar el nivel en base a un párametro indicador
+  }
   
+  //Método que genera el Tablero del Sprite mediante Matrix  
+  void crearPlataforma(String archivo)
+  {
+    String[] lineas  = loadStrings(archivo);
+    for(int row=0; row<lineas.length; row++)
+    {
+      String[] valores = split(lineas[row],";");
+      for(int col=0; col<valores.length;col++)
+      {
+        int num = obtenerNum(valores[col]);
+        if(num < 15)
+        {
+          FrameObject s = new FrameObject(mySprite[num],num);
+          s.center.x = sizeSprite/2 + col * sizeSprite;
+          s.center.y = sizeSprite/2 + row * sizeSprite;
+          plataforma.add(s);
+        }
+        else if(num == 32)
+        {
+          FrameObject s = new FrameObject(mySprite[15],num);
+          s.center.x = sizeSprite/2 + col * sizeSprite;
+          s.center.y = sizeSprite/2 + row * sizeSprite;
+          plataforma.add(s);
+        }
+      }
+    }
+  }
+  int obtenerNum(String txt)
+  {
+    int num=0;
+    num = Integer.valueOf(txt);
+    return num;
+  }
 }
