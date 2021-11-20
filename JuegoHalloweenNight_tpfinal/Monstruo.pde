@@ -1,72 +1,82 @@
 /** Representa la Clase MONSTRUO (permite crear e instanciar el objeto Monstruo)*/
-class Monstruo extends FrameObject{
-  
+class Monstruo extends Animacion {
+
   /** Declaración de atributos */
-  private String nombre;
-  private String habilidad;
-  private String tipo;
-  private float velocidad;
-  
-   /** Constructor defecto prueba*/
-  public Monstruo(Integer widthFrame, Integer heightFrame, PImage sprite){
-    super(widthFrame,heightFrame, sprite);
-    this.nombre = "";
-    this.posicion = new PVector(width,height-100);
-  }
-  
-  /** Metodos de Acceso (Getters y Setters)*/
-  public String getNombre() {
-    return this.nombre;
-  }
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  private Integer estado;
+
+  boolean enPlataforma, enPiso;
+  PImage[] irDer, irIzq, saltoDer, saltoIzq;
+
+  /**Constructor por defecto*/
+  public Monstruo(PImage imagen) {
+    super(imagen);
+    dir = ConstantList.derecha;
+    this.estado = 0;
+    enPlataforma = false;
+    enPiso = false;
+    irDer = new PImage[2];
+    irIzq = new PImage[2];
+    moverDer = new PImage[4];
+    moverIzq = new PImage[4];
+    saltoDer = new PImage[1];
+    saltoIzq = new PImage[1];
+    actual = saltoDer;
+    cargarEstado();
   }
 
-  public String getHabilidad() {
-    return this.habilidad;
-  }
-  public void setHabilidad(String habilidad) {
-    this.habilidad = habilidad;
-  }
-
-  public String getTipo() {
-    return this.tipo;
-  }
-  public void setTipo(String tipo) {
-    this.tipo = tipo;
-  }
-  
-  public float getVelocidad() {
-    return this.velocidad;
-  }
-  public void setVelocidad(float velocidad) {
-    this.velocidad = velocidad;
-  }
-  
-  public PVector getPosicion() {
-    return this.posicion;
-  }
-  public void setPosicion(PVector posicion) {
-    this.posicion = posicion;
-  }
-  
-  public PImage getSprite() {
-    return super.sprite;
-  }
-  public void setPosicion(PImage sprite) {
-    super.sprite = sprite;
-  }
-  
   /** Declaración de Procedimientos y Funciones*/
-  public void display(){
-    getSprite().resize(100,100);
-    imageMode(CENTER);
-    image(getSprite(),this.posicion.x,this.posicion.y);
-    this.posicion.x=posicion.x-4;
-  };//metodo (abstract) clase madre GameObject
+  void cargarEstado() {
+    if (estado == 0) {
+      irIzq[0] = monstruo[5];
+      irIzq[1] = monstruo[6];
+      irDer[0] = monstruo[0];
+      irDer[1] = monstruo[1];
+    }
+  }
   
+  @Override
+    void actualizar() {
+    enPlataforma = estaEnPlataforma(this, plataforma);
+    enPiso = super.getCambio().x == 0 && super.getCambio().y == 0;
+    super.actualizar();
+  }
+  @Override
+    void seleccionarDireccion() {
+    if (super.getCambio().x > 0)
+      dir = ConstantList.derecha;
+    else if (super.getCambio().x < 0)
+      dir = ConstantList.izquierda;
+  }
+  @Override
+    void seleccionarImagenActual() {
+    if (dir == ConstantList.derecha)
+    {
+      if (enPiso)
+        actual = irDer;
+      else if (!enPlataforma)
+        actual = saltoDer;
+      else
+        actual = moverDer;
+    } else if (dir == ConstantList.izquierda)
+    {
+      if (enPiso)
+        actual = irIzq;
+      else if (!enPlataforma)
+        actual = saltoIzq;
+      else
+        actual = moverIzq;
+    }
+  }
   
-  public void mover(PVector prmPosicion){};//método que le permitirá la acción de moverse al Monstruo
-  public void atacar(String habilidad){};//método que le permitira realizar un ataque
-  
+  //Método que valida la Colisión Jugador y Monstruo
+  boolean isColision(FrameObject s1, FrameObject s2)
+  {
+    boolean tocarX=s1.getRight() <= s2.getLeft() || s1.getLeft() >= s2.getRight();
+    boolean tocarY=s1.getBottom() <= s2.getTop() || s1.getTop() >= s2.getBottom();
+    if (tocarX || tocarY)
+      return false;
+    else
+      return true;
+      
+   }
 }
